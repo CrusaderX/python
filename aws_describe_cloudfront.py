@@ -1,8 +1,5 @@
 from datetime import datetime
 
-import time
-import boto3
-import os
 import asyncio
 import argparse
 import aiobotocore
@@ -11,7 +8,7 @@ import aiobotocore
 parser = argparse.ArgumentParser(description='Invalidate cache for cloudfront distribution')
 parser.add_argument('--tag', help='CloudFront tag',
                     required=True)
-parser.add_argument('--path', help='Distribution path to invalidate. Default: /*',
+parser.add_argument('--path', help='Distribution path to invalidate. Default is: /*',
                     required=True)
 args = parser.parse_args()
 
@@ -37,7 +34,7 @@ async def describeDistributionsTags(distributionId: str, distributionArn: str) -
 
 async def createInvalidation(distributionId: str, path: str = '/*') -> dict:
   """
-    Invalidate distribution cache for root path.
+    Invalidate distribution cache for given path.
   """
   return await client.create_invalidation(
     DistributionId = distributionId,
@@ -76,8 +73,7 @@ async def main():
         distributionId = distribution['distributionId']
 
   if distributionId:
-    invalidationResponse = await createInvalidation(distributionId)
-    print(invalidationResponse)
+    print(await createInvalidation(distributionId))
 
 
 asyncio.run(main())

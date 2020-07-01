@@ -58,6 +58,7 @@ async def main():
     
   tags  = []
   tasks = []
+  distributionId = ""
   
   distributions = await describeDistributions()
   
